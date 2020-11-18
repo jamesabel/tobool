@@ -1,4 +1,4 @@
-__application_name__ = "pyship"
+__application_name__ = "tobool"
 __author__ = "abel"
 __version__ = "0.0.1"
 __title__ = __application_name__
