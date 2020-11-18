@@ -1,0 +1,19 @@
+#
+# pypi
+twine
+keyring
+#
+# development
+wheel
+wheel-inspect
+black
+flake8
+#
+# docs
+sphinx
+#
+semver
+#
+# testing
+pytest
+pytest-cov
