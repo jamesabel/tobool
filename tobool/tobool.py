@@ -19,6 +19,7 @@ def to_bool(value):
     elif type(value) == Decimal and (value == Decimal(0) or value == Decimal(1)):
         new_bool = bool(value)
     elif type(value) == str:
+        value = value.strip()
         if value.lower() == "none" or value.lower() == "null":
             new_bool = None
         else:
