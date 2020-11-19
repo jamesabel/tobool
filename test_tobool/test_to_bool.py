@@ -15,7 +15,7 @@ def test_type_conversion():
         for variant in variants:
             assert value == to_bool(variant)
 
-    test_unsupported_values = {False: ["Nope", -1, "Nada", "fuggedaboutit", Decimal(-1)], True: ["Yup", "Si", 1.1, Decimal(100.0), Decimal(0.5)], None: ["huh?", "no idea", "nah"]}
+    test_unsupported_values = {False: ["Nope", -1, "Nada", "fuggedaboutit", Decimal(-1)], True: ["Yup", "Si", 1.1, Decimal(100.0), Decimal(0.5)], None: ["huh?", "no idea", "nah", ""]}
     for value, variants in test_unsupported_values.items():
         for variant in variants:
             with pytest.raises(ValueError):
