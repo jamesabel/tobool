@@ -43,12 +43,14 @@ htmlcov/
 .nox/
 
 # upload to codecov
-#.coverage
-#.coverage.*
+# coverage.xml
+# not used by codecov
+.coverage
+.coverage.*
 
 .cache
 nosetests.xml
-coverage.xml
+
 *.cover
 *.py,cover
 .hypothesis/
