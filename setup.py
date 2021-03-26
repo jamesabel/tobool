@@ -23,6 +23,6 @@ setup(
     classifiers=[],
     packages=[__application_name__],
     package_data={
-        "": [""],
+        __application_name__: ["py.typed"],
     },
 )
