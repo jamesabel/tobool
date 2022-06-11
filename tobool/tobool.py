@@ -1,8 +1,9 @@
 from decimal import Decimal
 import distutils.util
+from typing import Union
 
 
-def to_bool(value):
+def to_bool(value: Union[str, bool, int, Decimal, None]) -> Union[bool, None]:
     """
     performs a casting of a multitude of values to bool.
     i.e. "true", "TRUE", "y", "Yes", "on", "1", 1, "false", "FALSE", "n", "No", "off", "0", 0, etc.
