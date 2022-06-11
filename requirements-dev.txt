@@ -18,3 +18,4 @@ semver
 # testing
 pytest
 pytest-cov
+pytest-pycharm
