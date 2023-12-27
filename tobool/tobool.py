@@ -1,7 +1,9 @@
 from decimal import Decimal
 from typing import Union
+from functools import lru_cache
 
 
+@lru_cache()
 def strtobool(value: str) -> bool:
     """
     Convert a string representation of truth to true (1) or false (0).
@@ -28,6 +30,7 @@ class ToBoolNoneValueException(Exception):
     ...
 
 
+@lru_cache()
 def to_bool(value: Union[str, bool, int, Decimal, None]) -> Union[bool, None]:
     """
     performs a casting of a multitude of values to bool.
@@ -59,6 +62,7 @@ def to_bool(value: Union[str, bool, int, Decimal, None]) -> Union[bool, None]:
     return new_bool
 
 
+@lru_cache()
 def to_bool_strict(value: Union[str, bool, int, Decimal, None], fault_on_none: bool = False) -> bool:
     """
     Like to_bool(), except the return is strictly only a bool (the "strict" is on the output). A None return becomes a False.
