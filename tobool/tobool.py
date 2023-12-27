@@ -1,6 +1,27 @@
 from decimal import Decimal
-import distutils.util
 from typing import Union
+
+
+def strtobool(value: str) -> bool:
+    """
+    Convert a string representation of truth to true (1) or false (0).
+    True values are 'y', 'yes', 'on', 'true', 't', '1', and any string
+    starting with 'y', 'Y', 't', 'T', or '1'. False values are 'n', 'no',
+    'off', 'false', 'f', '0', and any string starting with 'n', 'N', 'f',
+    'F', or '0'. Raises ValueError if 'value' is anything else.
+
+    This is a copy of the Python 3.5 version of distutils.util.strtobool()
+
+    :param value: string value to convert
+    :return: bool value of original value
+    """
+    value = value.lower()
+    if value in ("y", "yes", "on", "true", "t", "1"):
+        return True
+    elif value in ("n", "no", "off", "false", "f", "0"):
+        return False
+    else:
+        raise ValueError("invalid truth value %r" % (value,))
 
 
 class ToBoolNoneValueException(Exception):
@@ -31,7 +52,7 @@ def to_bool(value: Union[str, bool, int, Decimal, None]) -> Union[bool, None]:
             new_bool = None
         else:
             # strtobool actually returns an int
-            new_bool = bool(distutils.util.strtobool(value))
+            new_bool = bool(strtobool(value))
     else:
         raise ValueError(value)
 
