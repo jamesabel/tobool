@@ -26,4 +26,5 @@ from tobool import to_bool_strict
 # to_bool_strict() will only return a bool
 print(to_bool_strict("True"))  # True
 print(to_bool_strict(None))  # False
+print(to_bool_strict(None, True))  # tobool.tobool.ToBoolNoneValueException: None
 ```
