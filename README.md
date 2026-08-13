@@ -32,7 +32,13 @@ print(to_bool("False"))  # False
 print(to_bool("Yes"))  # True
 print(to_bool("T"))  # True
 print(to_bool(1))  # True
+print(to_bool(1.0))  # True
+print(to_bool("1.0"))  # True
+print(to_bool("enabled"))  # True
+print(to_bool(b"true"))  # True
 print(to_bool("None"))  # None
+print(to_bool("n/a"))  # None
+print(to_bool(float("nan")))  # None
 ```
 
 ```python

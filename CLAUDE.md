@@ -40,7 +40,7 @@ CI (GitHub Actions, `.github/workflows/python-package.yml`) runs flake8 and `pyt
 
 All library code is in a single module, `tobool/tobool.py`, re-exported via `tobool/__init__.py`:
 
-- `to_bool(value)` — the core conversion; returns `bool` or `None` (string values "none"/"null"/"nil"/"na" and `None` map to `None`), raises `ValueError` for anything unrecognized. Uses a vendored copy of the removed `distutils.util.strtobool` for string handling.
+- `to_bool(value)` — the core conversion; returns `bool` or `None`, raises `ValueError` for anything unrecognized. Missing-value representations (`None`, NaN, and strings like "none"/"null"/"nil"/"na"/"nan"/"n/a"/"undefined"/"") map to `None`. Any `numbers.Number` equal to 0 or 1 converts; bytes are decoded and treated as strings; numeric strings like "1.0" convert via float. String vocabulary handling is a vendored-and-extended copy of the removed `distutils.util.strtobool`. Internationalization (e.g. "si") is deliberately out of scope.
 - `to_bool_strict(value, fault_on_none=False)` — wraps `to_bool` but always returns a `bool`; `None` becomes `False`, or raises `ToBoolNoneValueException` when `fault_on_none=True`.
 - All three functions are decorated with `@lru_cache()`, so inputs must remain hashable.
 
