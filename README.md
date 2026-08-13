@@ -1,3 +1,18 @@
+<p align="center">
+    <a href="https://github.com/jamesabel/tobool/actions/workflows/python-package.yml" alt="build">
+        <img src="https://img.shields.io/github/actions/workflow/status/jamesabel/tobool/python-package.yml?branch=main" />
+    </a>
+    <a href="https://pypi.org/project/tobool/" alt="pypi">
+        <img src="https://img.shields.io/pypi/v/tobool" />
+    </a>
+    <a href="https://pypi.org/project/tobool/" alt="downloads">
+        <img src="https://img.shields.io/pypi/dm/tobool" />
+    </a>
+    <a href="https://github.com/jamesabel/tobool/blob/main/LICENSE" alt="license">
+        <img src="https://img.shields.io/github/license/jamesabel/tobool" />
+    </a>
+</p>
+
 # tobool
 
 Convert many different representations of a bool to an actual bool or a None
