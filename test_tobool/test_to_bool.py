@@ -2,13 +2,14 @@ import pytest
 from copy import deepcopy
 
 from decimal import Decimal
+from fractions import Fraction
 
 from tobool import to_bool, to_bool_strict, ToBoolNoneValueException
 
 test_values = {
-    False: [False, "F", "false", "False", "FALSE", "N", "no", 0, Decimal(0), "off", " f", "0"],
-    True: [True, "T", "true", "yes", "Y", 1, Decimal(1), "on", "   T   ", "  t ", "1"],
-    None: [None, "None", "NONE", "NULL", "null", " None", "nil", "na", "NA"],
+    False: [False, "F", "false", "False", "FALSE", "N", "no", 0, 0.0, Decimal(0), Fraction(0), "off", " f", "0", "0.0", b"false", b"0", "disable", "disabled", "inactive"],
+    True: [True, "T", "true", "yes", "Y", 1, 1.0, Decimal(1), Fraction(1), "on", "   T   ", "  t ", "1", "1.0", b"true", b"1", "enable", "enabled", "active"],
+    None: [None, "None", "NONE", "NULL", "null", " None", "nil", "na", "NA", "nan", "NaN", "n/a", "N/A", "undefined", "", float("nan"), Decimal("NaN")],
 }
 
 
@@ -27,7 +28,12 @@ def test_type_conversion():
             assert type(new_value) is bool or new_value is None
             assert value == new_value
 
-    test_unsupported_values = {False: ["Nope", -1, "Nada", "fuggedaboutit", Decimal(-1)], True: ["Yup", "Si", 1.1, Decimal(100.0), Decimal(0.5)], None: ["huh?", "no idea", "nah", ""]}
+    # "Si" stays unsupported: internationalization is out of scope
+    test_unsupported_values = {
+        False: ["Nope", -1, "Nada", "fuggedaboutit", Decimal(-1), -1.0, Fraction(-1), b"nope"],
+        True: ["Yup", "Si", 1.1, Decimal(100.0), Decimal(0.5), float("inf"), "2.0", "1e6", b"\xfftrue"],
+        None: ["huh?", "no idea", "nah", object()],
+    }
     for value, variants in test_unsupported_values.items():
         for variant in variants:
             clear_caches()

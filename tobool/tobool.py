@@ -1,3 +1,4 @@
+import numbers
 from decimal import Decimal
 from typing import Union
 from functools import lru_cache
@@ -6,37 +7,37 @@ from functools import lru_cache
 @lru_cache()
 def strtobool(value: str) -> bool:
     """
-    Convert a string representation of truth to true (1) or false (0).
-    True values are 'y', 'yes', 'on', 'true', 't', '1', and any string
-    starting with 'y', 'Y', 't', 'T', or '1'. False values are 'n', 'no',
-    'off', 'false', 'f', '0', and any string starting with 'n', 'N', 'f',
-    'F', or '0'. Raises ValueError if 'value' is anything else.
+    Convert a string representation of truth to True or False.
+    True values are 'y', 'yes', 'on', 'true', 't', '1', 'enable', 'enabled', and 'active'.
+    False values are 'n', 'no', 'off', 'false', 'f', '0', 'disable', 'disabled', and 'inactive'.
+    Raises ValueError if 'value' is anything else.
 
-    This is a copy of the Python 3.5 version of distutils.util.strtobool()
+    Derived from the Python 3.5 version of distutils.util.strtobool(), with additional vocabulary.
 
     :param value: string value to convert
     :return: bool value of original value
     """
     value = value.lower()
-    if value in ("y", "yes", "on", "true", "t", "1"):
+    if value in ("y", "yes", "on", "true", "t", "1", "enable", "enabled", "active"):
         return True
-    elif value in ("n", "no", "off", "false", "f", "0"):
+    elif value in ("n", "no", "off", "false", "f", "0", "disable", "disabled", "inactive"):
         return False
     else:
         raise ValueError("invalid truth value %r" % (value,))
 
 
 class ToBoolNoneValueException(Exception):
-    ...
+    """raised by to_bool_strict() with fault_on_none=True when given any of the "None" values"""
 
 
 @lru_cache()
-def to_bool(value: Union[str, bool, int, Decimal, None]) -> Union[bool, None]:
+def to_bool(value: Union[str, bytes, bool, int, float, Decimal, None]) -> Union[bool, None]:
     """
     performs a casting of a multitude of values to bool.
-    i.e. "true", "TRUE", "y", "Yes", "on", "1", 1, "false", "FALSE", "n", "No", "off", "0", 0, etc.
+    i.e. "true", "TRUE", "y", "Yes", "on", "enabled", "1", "1.0", 1, 1.0, "false", "FALSE", "n", "No", "off", "disabled", "0", 0, 0.0, etc.
+    Any numeric type (int, float, Decimal, Fraction, etc.) equal to 0 or 1 converts, NaN converts to None, and bytes are decoded and treated as strings.
     :param value: input value
-    :return: boolean value of original value
+    :return: boolean value of original value (None for the "missing value" representations such as None, "none", "null", "n/a", "", NaN, etc.)
     """
 
     new_bool: Union[bool, None]  # for mypy
@@ -45,17 +46,30 @@ def to_bool(value: Union[str, bool, int, Decimal, None]) -> Union[bool, None]:
         new_bool = value
     elif value is None:
         new_bool = None
-    elif isinstance(value, int) and 0 <= value <= 1:
-        new_bool = bool(value)
-    elif isinstance(value, Decimal) and (value == Decimal(0) or value == Decimal(1)):
-        new_bool = bool(value)
-    elif isinstance(value, str):
+    elif isinstance(value, numbers.Number):
+        if value != value:
+            # NaN is the only value not equal to itself and represents a missing value
+            new_bool = None
+        elif value == 0 or value == 1:
+            new_bool = bool(value)
+        else:
+            raise ValueError(value)
+    elif isinstance(value, (str, bytes)):
+        if isinstance(value, bytes):
+            value = value.decode()  # a non-decodable input raises UnicodeDecodeError, which is a ValueError
         value = value.strip().lower()
-        if value == "none" or value == "null" or value == "nil" or value == "na":
+        if value in ("", "none", "null", "nil", "na", "nan", "n/a", "undefined"):
             new_bool = None
         else:
-            # strtobool actually returns an int
-            new_bool = bool(strtobool(value))
+            try:
+                new_bool = bool(strtobool(value))
+            except ValueError:
+                # numeric strings such as "0.0" and "1.0"
+                try:
+                    number = float(value)
+                except ValueError:
+                    raise ValueError(value) from None
+                new_bool = to_bool(number)
     else:
         raise ValueError(value)
 
@@ -63,7 +77,7 @@ def to_bool(value: Union[str, bool, int, Decimal, None]) -> Union[bool, None]:
 
 
 @lru_cache()
-def to_bool_strict(value: Union[str, bool, int, Decimal, None], fault_on_none: bool = False) -> bool:
+def to_bool_strict(value: Union[str, bytes, bool, int, float, Decimal, None], fault_on_none: bool = False) -> bool:
     """
     Like to_bool(), except the return is strictly only a bool (the "strict" is on the output). A None return becomes a False.
     Good for strict return typing and not having to worry about Python's "truthiness" on a None.
