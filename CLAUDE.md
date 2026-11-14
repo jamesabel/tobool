@@ -32,7 +32,7 @@ Lint/format/type-check — these scripts resolve paths relative to the parent of
 - `run_flake8.bat` — flake8 (ignores E402,F401,W503,E203,E501; report written to `doc\flake8_report.txt`)
 - `run_mypy.bat` — mypy on the `tobool` module (the package ships `py.typed`)
 
-Build a wheel: `build.bat` (run from the repo root). Publish to PyPI: `pypi.bat` (run from inside `scripts\`; calls build then twine).
+Build a wheel: `build.bat` (run from the repo root). Publish to PyPI: publish a GitHub release (or run the `Publish to PyPI` workflow); `.github/workflows/publish.yml` builds and uploads with Provenance through a PyPI trusted publisher. Never upload from a workstation, which cannot produce Provenance.
 
 CI (GitHub Actions, `.github/workflows/python-package.yml`) runs flake8 and `pytest test_tobool` on Python 3.8–3.15, so keep the code compatible with older Pythons despite the local venv being newer.
 
