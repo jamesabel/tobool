@@ -12,6 +12,7 @@ setup(
     version=__version__,
     author=__author__,
     install_requires=requirements,
+    python_requires=">=3.10",
     description=__description__,
     long_description=long_description,
     long_description_content_type="text/markdown",
