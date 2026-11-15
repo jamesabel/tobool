@@ -34,7 +34,7 @@ Lint/format/type-check — these scripts resolve paths relative to the parent of
 
 Build a wheel: `build.bat` (run from the repo root). Publish to PyPI: publish a GitHub release (or run the `Publish to PyPI` workflow); `.github/workflows/publish.yml` builds and uploads with Provenance through a PyPI trusted publisher. Never upload from a workstation, which cannot produce Provenance.
 
-CI (GitHub Actions, `.github/workflows/python-package.yml`) runs flake8 and `pytest test_tobool` on Python 3.8–3.15, so keep the code compatible with older Pythons despite the local venv being newer.
+CI (GitHub Actions, `.github/workflows/python-package.yml`) runs flake8 and `pytest test_tobool` on Python 3.10–3.15 (3.10 is the minimum supported version), so keep the code compatible with older Pythons despite the local venv being newer.
 
 ## Architecture
 
